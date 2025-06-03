@@ -1,7 +1,7 @@
 'use client'
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FiHome, FiShoppingBag, FiMap, FiHeadphones, FiMail } from 'react-icons/fi';
+import { FiHome, FiShoppingBag, FiMap, FiHeadphones, FiMail,FiBook,FiShare2  } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 
 const Sidebar = () => {
@@ -9,18 +9,20 @@ const Sidebar = () => {
   const router = useRouter();
   
   const menuItems = [
-    { name: 'home', icon: <FiHome size={24} />, label: 'Home' },
+    { name: '/', icon: <FiHome size={24} />, label: 'Home' },
+    { name: 'history', icon: <FiBook size={24} />, label: 'History' },
     { name: 'shops', icon: <FiShoppingBag size={24} />, label: 'Shops' },
     { name: 'places', icon: <FiMap size={24} />, label: 'Places' },
     { name: 'podcasts', icon: <FiHeadphones size={24} />, label: 'Podcast' },
     { name: 'contact', icon: <FiMail size={24} />, label: 'Contact' },
+    { name: 'socialmedia', icon: <FiShare2  size={24} />, label: 'Social Media' },
   ];
 
   return (
     <>
       {/* Mobile Menu Button */}
       <motion.button
-        className="fixed top-4 left-4 z-50 bg-[#25282F] p-3 rounded-full shadow-lg lg:hidden"
+        className="fixed top-4 left-1 z-50 bg-[#25282F] p-3 rounded-full shadow-lg cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
         whileTap={{ scale: 0.95 }}
       >
@@ -32,17 +34,17 @@ const Sidebar = () => {
       {/* Sidebar */}
       <motion.div 
         className={`fixed top-0 left-0 h-full bg-[#25282F] border-r border-[#3a3d45] z-40 flex flex-col py-6 transition-all duration-300 ${
-          isOpen ? 'w-64' : 'w-0 lg:w-24'
+          isOpen ? 'w-56' : 'w-0 lg:w-24'
         } overflow-hidden`}
         initial={{ width: 0 }}
-        animate={{ width: isOpen ? 256 : 96 }}
+        animate={{ width: isOpen ? 256 : 0 }}
         transition={{ duration: 0.3 }}
       >
         <div className="px-4 mb-10">
           <div className=" rounded-xl w-16 h-16" />
         </div>
         
-        <div className="flex flex-col space-y-9">
+        <div className="flex flex-col space-y-7">
           {menuItems.map((item) => (
             <motion.button
               key={item.name}
