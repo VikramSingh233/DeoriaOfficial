@@ -5,10 +5,14 @@ import { useState } from 'react';
 import { FiSearch, FiPhone, FiMapPin, FiStar, FiChevronRight } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
+  import { useEffect } from 'react';
 export default function ShopPage() {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  
+const [shopsByCategory, setShopsByCategory] = useState({});
+const [loading, setLoading] = useState(true);
 
   // Shop categories
   const categories = [
@@ -22,79 +26,123 @@ export default function ShopPage() {
     { id: 'medical', name: 'Medical Stores', icon: '💊' },
   ];
 
-  // Generate dummy shop data
-  const generateShops = (category, count = 5) => {
-    const shops = [];
-    const categoryNames = {
-      veg: ['Green Leaf Restaurant', 'Pure Veg Delight', 'Sattvik Bhojanalaya', 'Annapurna Veg Corner', 'Shree Krishna Veg Plaza'],
-      nonveg: ['Chicken Paradise', 'Meat Master', 'Royal Non-Veg House', 'Spicy Grill Corner', 'Mutton Delight'],
-      hotel: ['Deoria Grand', 'Comfort Inn', 'River View Lodge', 'City Center Hotel', 'Travelers Rest'],
-      barber: ['Style Cuts', 'Gentleman Salon', 'Hair Masters', 'Trendy Looks', 'Royal Barber'],
-      electronics: ['Electro World', 'Gadget Hub', 'Tech Palace', 'Digital Point', 'Smart Devices'],
-      clothing: ['Fashion Hub', 'Trendy Threads', 'Ethnic Wear Center', 'Denim Palace', 'Silk & Sarees'],
-      grocery: ['Daily Needs Mart', 'Super Saver Store', 'Fresh & Fine Grocers', 'Family Food Center', 'Local Bazaar'],
-      medical: ['Life Care Pharmacy', 'Medi Quick', 'Health Plus', '24x7 Medicals', 'Apollo Drug Store'],
-    };
 
-    const locations = [
-      'Near Bus Stand, Deoria',
-      'Main Market, Deoria',
-      'Raja Bazaar, Deoria',
-      'Civil Lines, Deoria',
-      'Station Road, Deoria',
-      'Gandhi Chowk, Deoria'
-    ];
 
-    const specialties = {
-      veg: ['Best Thali in Town', 'Authentic Bhojpuri Cuisine', 'Pure Desi Ghee Dishes', 'Fresh Organic Ingredients', 'Famous Litti Chokha'],
-      nonveg: ['Special Mutton Curry', 'Tandoori Delights', 'Butter Chicken Special', 'Fresh Seafood', 'Spicy Kebabs'],
-      hotel: ['AC Rooms Available', 'Free WiFi', '24/7 Reception', 'Restaurant on Premises', 'Travel Assistance'],
-      barber: ['Beard Styling', 'Hair Coloring', 'Professional Stylists', 'Head Massage', 'Quick Service'],
-      electronics: ['Mobile Repair Service', 'Genuine Accessories', 'Home Appliances', 'Competitive Prices', 'Expert Advice'],
-      clothing: ['Latest Fashion Trends', 'Traditional Outfits', 'Custom Tailoring', 'Discounts on Bulk', 'Festival Specials'],
-      grocery: ['Fresh Vegetables', 'Organic Products', 'Daily Essentials', 'Home Delivery', 'Competitive Prices'],
-      medical: ['24/7 Availability', 'All Medicines Available', 'Doctor Consultation', 'Home Delivery', 'Discounts for Regulars'],
-    };
 
-    for (let i = 0; i < count; i++) {
-      shops.push({
-        id: `${category}-${i+1}`,
-        name: categoryNames[category][i],
-        location: locations[Math.floor(Math.random() * locations.length)],
-        bestThing: specialties[category][i],
-        contact: `9${Math.floor(10000000 + Math.random() * 90000000)}`,
-        rating: (4 + Math.random()).toFixed(1),
-        image: `/shop-${Math.floor(Math.random() * 5) + 1}.jpg`, // Placeholder image
-      });
+useEffect(() => {
+  const fetchShops = async () => {
+    try {
+    const res = await fetch('/api/getbestshops');
+const data = await res.json();
+
+if (!data.shops || !Array.isArray(data.shops)) {
+  console.error("Invalid shop data", data);
+  return;
+}
+
+const grouped = data.shops.reduce((acc, shop) => {
+  const cat = shop.category;
+  if (!acc[cat]) acc[cat] = [];
+  acc[cat].push(shop);
+  return acc;
+}, {});
+
+      console.log("Grouped shops by category:", grouped);
+      setShopsByCategory(grouped);
+    } catch (err) {
+      console.error('Error fetching shops:', err);
+    } finally {
+      setLoading(false);
     }
-    
-    return shops;
   };
 
-  // All shops data
-  const allShops = {
-    veg: generateShops('veg'),
-    nonveg: generateShops('nonveg'),
-    hotel: generateShops('hotel'),
-    barber: generateShops('barber'),
-    electronics: generateShops('electronics'),
-    clothing: generateShops('clothing'),
-    grocery: generateShops('grocery'),
-    medical: generateShops('medical'),
-  };
+  fetchShops();
+}, []);
+
+
+
+  // Generate dummy shop data
+  // const generateShops = (category, count = 5) => {
+  //   const shops = [];
+  //   const categoryNames = {
+  //     veg: ['Green Leaf Restaurant', 'Pure Veg Delight', 'Sattvik Bhojanalaya', 'Annapurna Veg Corner', 'Shree Krishna Veg Plaza'],
+  //     nonveg: ['Chicken Paradise', 'Meat Master', 'Royal Non-Veg House', 'Spicy Grill Corner', 'Mutton Delight'],
+  //     hotel: ['Deoria Grand', 'Comfort Inn', 'River View Lodge', 'City Center Hotel', 'Travelers Rest'],
+  //     barber: ['Style Cuts', 'Gentleman Salon', 'Hair Masters', 'Trendy Looks', 'Royal Barber'],
+  //     electronics: ['Electro World', 'Gadget Hub', 'Tech Palace', 'Digital Point', 'Smart Devices'],
+  //     clothing: ['Fashion Hub', 'Trendy Threads', 'Ethnic Wear Center', 'Denim Palace', 'Silk & Sarees'],
+  //     grocery: ['Daily Needs Mart', 'Super Saver Store', 'Fresh & Fine Grocers', 'Family Food Center', 'Local Bazaar'],
+  //     medical: ['Life Care Pharmacy', 'Medi Quick', 'Health Plus', '24x7 Medicals', 'Apollo Drug Store'],
+  //   };
+
+  //   const locations = [
+  //     'Near Bus Stand, Deoria',
+  //     'Main Market, Deoria',
+  //     'Raja Bazaar, Deoria',
+  //     'Civil Lines, Deoria',
+  //     'Station Road, Deoria',
+  //     'Gandhi Chowk, Deoria'
+  //   ];
+
+  //   const specialties = {
+  //     veg: ['Best Thali in Town', 'Authentic Bhojpuri Cuisine', 'Pure Desi Ghee Dishes', 'Fresh Organic Ingredients', 'Famous Litti Chokha'],
+  //     nonveg: ['Special Mutton Curry', 'Tandoori Delights', 'Butter Chicken Special', 'Fresh Seafood', 'Spicy Kebabs'],
+  //     hotel: ['AC Rooms Available', 'Free WiFi', '24/7 Reception', 'Restaurant on Premises', 'Travel Assistance'],
+  //     barber: ['Beard Styling', 'Hair Coloring', 'Professional Stylists', 'Head Massage', 'Quick Service'],
+  //     electronics: ['Mobile Repair Service', 'Genuine Accessories', 'Home Appliances', 'Competitive Prices', 'Expert Advice'],
+  //     clothing: ['Latest Fashion Trends', 'Traditional Outfits', 'Custom Tailoring', 'Discounts on Bulk', 'Festival Specials'],
+  //     grocery: ['Fresh Vegetables', 'Organic Products', 'Daily Essentials', 'Home Delivery', 'Competitive Prices'],
+  //     medical: ['24/7 Availability', 'All Medicines Available', 'Doctor Consultation', 'Home Delivery', 'Discounts for Regulars'],
+  //   };
+
+  //   for (let i = 0; i < count; i++) {
+  //     shops.push({
+  //       id: `${category}-${i+1}`,
+  //       name: categoryNames[category][i],
+  //       location: locations[Math.floor(Math.random() * locations.length)],
+  //       bestThing: specialties[category][i],
+  //       contact: `9${Math.floor(10000000 + Math.random() * 90000000)}`,
+  //       rating: (4 + Math.random()).toFixed(1),
+  //       image: `/shop-${Math.floor(Math.random() * 5) + 1}.jpg`, // Placeholder image
+  //     });
+  //   }
+    
+  //   return shops;
+  // };
+
+  // // All shops data
+  // const allShops = {
+  //   veg: generateShops('veg'),
+  //   nonveg: generateShops('nonveg'),
+  //   hotel: generateShops('hotel'),
+  //   barber: generateShops('barber'),
+  //   electronics: generateShops('electronics'),
+  //   clothing: generateShops('clothing'),
+  //   grocery: generateShops('grocery'),
+  //   medical: generateShops('medical'),
+  // };
 
   // Filter shops based on active category and search query
-  const filteredCategories = Object.entries(allShops)
-    .filter(([categoryId]) => 
-      activeCategory === 'all' || categoryId === activeCategory
+const filteredCategories = Object.entries(shopsByCategory)
+  .filter(([categoryId, shops]) => 
+    (activeCategory === 'all' || categoryId === activeCategory) &&
+    (searchQuery === '' || 
+     shops.some(shop => 
+       shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       categoryId.toLowerCase().includes(searchQuery.toLowerCase())
+     )
     )
-    .filter(([categoryId, shops]) => 
-      searchQuery === '' || 
-      shops.some(shop => 
-        shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        categoryId.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
+  );
+
+  if (loading) {
+  return (
+    <div className="min-h-screen bg-[#1C1F24] text-[#fffaf4] flex justify-center items-center">
+      <p>Loading shops...</p>
+    </div>
+  )
+}
+
+
 
   return (
     <div className="min-h-screen bg-[#1C1F24] text-[#fffaf4]">
@@ -192,18 +240,13 @@ export default function ShopPage() {
                     <span className="mr-3">{category?.icon}</span>
                     {category?.name}
                   </h2>
-                  <button 
-                    className="text-[#dd7358] hover:underline flex items-center"
-                    onClick={() => router.push(`/shops/${categoryId}`)}
-                  >
-                    View more <FiChevronRight className="ml-1" />
-                  </button>
+               
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
                   {shops.map((shop) => (
                     <motion.div
-                      key={shop.id}
+                     key={shop.id + shop.name}
                       className="bg-[#25282F] rounded-xl overflow-hidden shadow-lg border border-[#3a3e46] hover:border-[#dd7358]/50 transition-all"
                       whileHover={{ y: -5 }}
                     >
@@ -215,19 +258,29 @@ export default function ShopPage() {
                       <div className="p-4">
                         <h3 className="font-bold text-lg mb-1">{shop.name}</h3>
                         <div className="flex items-center text-[#c5c1b8] text-sm mb-2">
-                          <FiMapPin className="mr-2" />
+                          <FiMapPin className="mr-2 " />
                           <span>{shop.location}</span>
+                        
                         </div>
-                        <p className="text-[#dd7358] text-sm mb-3">Best for: {shop.bestThing}</p>
+                        <p className="text-[#dd7358] text-sm mb-3">Best for: {shop.bestFor}</p>
                         <div className="flex justify-between items-center mt-4">
                           <div className="flex items-center">
                             <FiPhone className="mr-2 text-[#dd7358]" />
-                            <span>{shop.contact}</span>
+                            <span>{shop.contactNo}</span>
                           </div>
                           <button className="text-[#dd7358] hover:underline text-sm">
                             Directions
                           </button>
+                    
+                          
                         </div>
+  <div 
+  onClick={() => router.push(shop.watchExperience)} 
+  className="flex items-center mt-3 justify-between text-gray-100 font-bold cursor-pointer hover:underline  text-center"
+>
+  Watch Experience
+</div>
+
                       </div>
                     </motion.div>
                   ))}

@@ -14,6 +14,7 @@ const Sidebar = () => {
     { name: 'shops', icon: <FiShoppingBag size={24} />, label: 'Shops' },
     { name: 'places', icon: <FiMap size={24} />, label: 'Places' },
     { name: 'podcasts', icon: <FiHeadphones size={24} />, label: 'Podcast' },
+    { name: 'blog', icon: <FiBook size={24} />, label: 'Blog' },
     { name: 'contact', icon: <FiMail size={24} />, label: 'Contact' },
     { name: 'socialmedia', icon: <FiShare2  size={24} />, label: 'Social Media' },
   ];
@@ -44,7 +45,7 @@ const Sidebar = () => {
           <div className=" rounded-xl w-16 h-16" />
         </div>
         
-        <div className="flex flex-col space-y-7">
+        <div className="flex flex-col space-y-5">
           {menuItems.map((item) => (
             <motion.button
               key={item.name}

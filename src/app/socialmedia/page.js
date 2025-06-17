@@ -25,9 +25,9 @@ export default function SocialHub() {
               <a href="#contact" className="hover:text-[#dd7358] transition">Contact</a>
             </div>
             <div>
-              <button className="bg-gradient-to-r from-[#dd7358] to-[#c25d44] px-5 py-2 rounded-lg font-medium hover:opacity-90 transition">
+              {/* <button className="bg-gradient-to-r from-[#dd7358] to-[#c25d44] px-5 py-2 rounded-lg font-medium hover:opacity-90 transition">
                 Subscribe 
-              </button>
+              </button> */}
             </div>
           </div>
         </nav>
@@ -219,71 +219,6 @@ export default function SocialHub() {
         </section>
 
         <Footer/>
-
-        {/* Footer
-        <footer id="contact" className="py-12 px-6 md:px-12 border-t border-gray-800">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-              <div>
-                <div className="text-2xl font-bold mb-4">
-                  <span className="text-[#dd7358]">Social</span>Hub
-                </div>
-                <p className="text-gray-300 mb-6">
-                  Connecting innovative content across platforms and celebrating digital achievements.
-                </p>
-                <div className="flex space-x-4">
-                  <a href="#" className="text-gray-400 hover:text-[#dd7358] transition">
-                    <FaFacebookF />
-                  </a>
-                  <a href="#" className="text-gray-400 hover:text-[#dd7358] transition">
-                    <FaInstagram />
-                  </a>
-                  <a href="#" className="text-gray-400 hover:text-[#dd7358] transition">
-                    <FaYoutube />
-                  </a>
-                  <a href="#" className="text-gray-400 hover:text-[#dd7358] transition">
-                    <FaTwitter />
-                  </a>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-bold mb-4">Platforms</h3>
-                <ul className="space-y-3">
-                  <li><a href="#" className="text-gray-300 hover:text-[#dd7358] transition">Instagram</a></li>
-                  <li><a href="#" className="text-gray-300 hover:text-[#dd7358] transition">Facebook</a></li>
-                  <li><a href="#" className="text-gray-300 hover:text-[#dd7358] transition">YouTube</a></li>
-                  <li><a href="#" className="text-gray-300 hover:text-[#dd7358] transition">Twitter</a></li>
-                  <li><a href="#" className="text-gray-300 hover:text-[#dd7358] transition">LinkedIn</a></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-bold mb-4">Content</h3>
-                <ul className="space-y-3">
-                  <li><a href="#" className="text-gray-300 hover:text-[#dd7358] transition">Featured</a></li>
-                  <li><a href="#" className="text-gray-300 hover:text-[#dd7358] transition">Tutorials</a></li>
-                  <li><a href="#" className="text-gray-300 hover:text-[#dd7358] transition">Behind the Scenes</a></li>
-                  <li><a href="#" className="text-gray-300 hover:text-[#dd7358] transition">Live Sessions</a></li>
-                  <li><a href="#" className="text-gray-300 hover:text-[#dd7358] transition">Exclusive Content</a></li>
-                </ul>
-              </div>
-              
-              <div>
-                <h3 className="text-lg font-bold mb-4">Contact</h3>
-                <ul className="space-y-3">
-                  <li className="text-gray-300">business@example.com</li>
-                  <li className="text-gray-300">+1 (123) 456-7890</li>
-                  <li className="text-gray-300">Los Angeles, CA</li>
-                </ul>
-              </div>
-            </div>
-            
-            <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-              <p>© 2023 SocialHub. All rights reserved. Proudly the first to achieve this milestone.</p>
-            </div>
-          </div>
-        </footer> */}
       </div>
     </>
   );

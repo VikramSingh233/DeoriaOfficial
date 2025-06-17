@@ -1,12 +1,13 @@
 // app/podcasts/page.js
 'use client';
-import { useState } from 'react';
+import { useState , useEffect} from 'react';
 import { motion } from 'framer-motion';
 import { FiPlay, FiCalendar, FiClock, FiUser, FiYoutube } from 'react-icons/fi';
 import Sidebar from '@/components/Sidebar';
 export default function PodcastPage() {
   const [activeCategory, setActiveCategory] = useState('all');
-  
+  const [podcastsByCategory, setPodcastsByCategory] = useState({});
+const [loading, setLoading] = useState(true);
   // Podcast categories
   const categories = [
     { id: 'all', name: 'All Podcasts' },
@@ -17,106 +18,53 @@ export default function PodcastPage() {
     { id: 'interview', name: 'Interviews' },
   ];
 
-  // Podcast data
-  const podcasts = [
-    {
-      id: 1,
-      title: "The Future of Business in Deoria",
-      description: "Join us as we explore the evolving business landscape in Deoria and how local entrepreneurs are adapting to modern challenges.",
-      guest: "Rajesh Gupta - President, Deoria Chamber of Commerce",
-      date: "May 15, 2024",
-      duration: "42 min",
-      youtubeId: "dQw4w9WgXcQ",
-      category: "business",
-      thumbnail: "/podcast-1.jpg"
-    },
-    {
-      id: 2,
-      title: "Cultural Heritage of Eastern UP",
-      description: "Discover the rich cultural traditions, folk arts, and festivals that make Eastern Uttar Pradesh unique.",
-      guest: "Dr. Priya Singh - Cultural Anthropologist",
-      date: "May 8, 2024",
-      duration: "38 min",
-      youtubeId: "dQw4w9WgXcQ",
-      category: "culture",
-      thumbnail: "/podcast-2.jpg"
-    },
-    {
-      id: 3,
-      title: "Historical Landmarks of Deoria District",
-      description: "A journey through time exploring the ancient temples, colonial architecture, and forgotten stories of Deoria.",
-      guest: "Prof. Arun Verma - Historian",
-      date: "May 1, 2024",
-      duration: "51 min",
-      youtubeId: "dQw4w9WgXcQ",
-      category: "history",
-      thumbnail: "/podcast-3.jpg"
-    },
-    {
-      id: 4,
-      title: "Infrastructure Development in Deoria",
-      description: "Discussion on upcoming infrastructure projects, road networks, and urban planning initiatives in Deoria.",
-      guest: "Mr. Vikas Patel - City Planner",
-      date: "Apr 24, 2024",
-      duration: "45 min",
-      youtubeId: "dQw4w9WgXcQ",
-      category: "development",
-      thumbnail: "/podcast-4.jpg"
-    },
-    {
-      id: 5,
-      title: "Interview with a Local Artist",
-      description: "Meet Ritu Sharma, a talented painter whose work captures the essence of rural life in Eastern UP.",
-      guest: "Ritu Sharma - Artist",
-      date: "Apr 17, 2024",
-      duration: "33 min",
-      youtubeId: "dQw4w9WgXcQ",
-      category: "interview",
-      thumbnail: "/podcast-5.jpg"
-    },
-    {
-      id: 6,
-      title: "Agriculture Innovations in the Region",
-      description: "Exploring modern farming techniques and sustainable agriculture practices being adopted by Deoria farmers.",
-      guest: "Dr. Sanjay Kumar - Agricultural Scientist",
-      date: "Apr 10, 2024",
-      duration: "47 min",
-      youtubeId: "dQw4w9WgXcQ",
-      category: "business",
-      thumbnail: "/podcast-6.jpg"
-    },
-    {
-      id: 7,
-      title: "Folklore and Legends of Deoria",
-      description: "Uncovering the fascinating myths, legends, and folk tales passed down through generations in Deoria.",
-      guest: "Mrs. Shanti Devi - Folklorist",
-      date: "Apr 3, 2024",
-      duration: "40 min",
-      youtubeId: "dQw4w9WgXcQ",
-      category: "culture",
-      thumbnail: "/podcast-7.jpg"
-    },
-    {
-      id: 8,
-      title: "Youth Entrepreneurship in Deoria",
-      description: "Young entrepreneurs share their journey of starting businesses in Deoria and the challenges they overcame.",
-      guest: "Amit & Neha - Founders, Deoria Craft Hub",
-      date: "Mar 27, 2024",
-      duration: "49 min",
-      youtubeId: "dQw4w9WgXcQ",
-      category: "business",
-      thumbnail: "/podcast-8.jpg"
-    },
-  ];
 
-  // Filter podcasts based on active category
-  const filteredPodcasts = activeCategory === 'all' 
-    ? podcasts 
-    : podcasts.filter(podcast => podcast.category === activeCategory);
+
+useEffect(() => {
+  const fetchPodcasts = async () => {
+    try {
+      const res = await fetch('/api/getpodcasts');
+      const data = await res.json();
+
+      if (!data.podcasts || !Array.isArray(data.podcasts)) {
+        console.error("Invalid podcast data", data);
+        return;
+      }
+
+      // Group podcasts by category
+      const grouped = data.podcasts.reduce((acc, podcast) => {
+        const cat = podcast.category || 'other';
+        if (!acc[cat]) acc[cat] = [];
+        acc[cat].push(podcast);
+        return acc;
+      }, {});
+
+      console.log("Grouped podcasts by category:", grouped);
+      setPodcastsByCategory(grouped);
+    } catch (err) {
+      console.error('Error fetching podcasts:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchPodcasts();
+}, []);
+  
+
+// Get all podcasts as a flat array if needed
+const allPodcasts = Object.values(podcastsByCategory).flat();
+console.log("All podcasts:",allPodcasts);
+
+// Filter podcasts based on active category
+const filteredPodcasts = activeCategory === 'all' 
+  ? allPodcasts 
+  : podcastsByCategory[activeCategory] || [];
+
 
   // Function to open YouTube video
-  const openYouTube = (youtubeId) => {
-    window.open(`https://www.youtube.com/watch?v=${youtubeId}`, '_blank');
+  const openLink = (link) => {
+    window.open(link, '_blank');
   };
 
   return (
@@ -181,7 +129,7 @@ export default function PodcastPage() {
               {/* Thumbnail with Play Button */}
               <div 
                 className="relative h-52 cursor-pointer group"
-                onClick={() => openYouTube(podcast.youtubeId)}
+                onClick={() => openLink(podcast.link)}
               >
                 <div className="bg-gray-800 w-full h-full flex items-center justify-center">
                   <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
@@ -211,8 +159,8 @@ export default function PodcastPage() {
                   <h3 className="text-xl font-bold text-[#e2e8f0]">{podcast.title}</h3>
                   <button 
                     className="text-[#0ea5e9] hover:text-[#38bdf8]"
-                    onClick={() => openYouTube(podcast.youtubeId)}
-                    title="Watch on YouTube"
+                    onClick={() => openLink(podcast.link)}
+                    title="Watch"
                   >
                     <FiYoutube className="text-2xl" />
                   </button>
@@ -226,8 +174,8 @@ export default function PodcastPage() {
                       <FiUser className="text-xl" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-semibold text-[#cbd5e1] mb-1">Featured Guest</h4>
-                      <p className="text-[#94a3b8] text-sm">{podcast.guest}</p>
+                      <h4 className="text-sm font-semibold text-[#cbd5e1] mb-1">Featured Guest: {podcast.guestName}</h4>
+                      <p className="text-[#94a3b8] text-sm">{podcast.guestDescription}</p>
                     </div>
                   </div>
                 </div>

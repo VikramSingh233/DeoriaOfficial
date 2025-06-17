@@ -1,16 +1,20 @@
-// app/places/page.js
+// app/placess/page.js
 'use client'
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { FiSearch, FiPhone, FiMapPin, FiStar, FiChevronRight } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
-export default function PlacesPage() {
+  import { useEffect } from 'react';
+export default function placesPage() {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  
+const [placessByCategory, setplacessByCategory] = useState({});
+const [loading, setLoading] = useState(true);
 
-  // Place categories
+  // places categories
   const categories = [
     { id: 'temple', name: 'Temples', icon: '🛕' },
     { id: 'park', name: 'Parks', icon: '🌳' },
@@ -22,148 +26,68 @@ export default function PlacesPage() {
     { id: 'other', name: 'Other Attractions', icon: '📍' },
   ];
 
-  // Generate dummy place data
-  const generatePlaces = (category, count = 4) => {
-    const places = [];
-    const categoryNames = {
-      temple: ['Chandrika Devi Temple', 'Devi Patan Temple', 'Hanuman Garhi', 'Shiv Mandir', 'Ram Janki Temple'],
-      park: ['Gandhi Park', 'Children\'s Park', 'City Central Park', 'Riverside Garden', 'Deoria Eco Park'],
-      historical: ['Raja Bazaar Fort Ruins', 'British Era Clock Tower', 'Ancient Stepwell', 'Colonial Courthouse', 'Freedom Fighter Memorial'],
-      waterpark: ['Aqua Splash Water Park', 'Deoria Fun World', 'Water Kingdom', 'Monsoon Resort', 'Splashdown Deoria'],
-      lake: ['Ramgarh Tal', 'Rapti River Front', 'Deoria Lake', 'Moti Jheel', 'Surya Kund'],
-      museum: ['Deoria Heritage Museum', 'Folk Art Gallery', 'Archaeological Museum', 'Textile Museum', 'Agricultural Museum'],
-      garden: ['Rose Garden', 'Botanical Garden', 'Butterfly Park', 'Medicinal Plant Garden', 'Municipal Garden'],
-      other: ['Deoria Haat', 'Craft Village', 'Sunset Point', 'Adventure Zone', 'Cultural Center'],
-    };
 
-    const locations = [
-      'Near Bus Stand, Deoria',
-      'Main Market, Deoria',
-      'Raja Bazaar, Deoria',
-      'Civil Lines, Deoria',
-      'Station Road, Deoria',
-      'Gandhi Chowk, Deoria',
-      'Ramgarh Road, Deoria',
-      'Rapti River Bank, Deoria'
-    ];
 
-    const descriptions = {
-      temple: [
-        'Ancient temple dedicated to Goddess Chandrika with intricate carvings',
-        'One of the 51 Shakti Peethas with significant religious importance',
-        'Famous temple complex with panoramic views of the city',
-        'Peaceful riverside temple known for its evening aarti',
-        'Historic temple with beautiful architecture and spiritual ambiance'
-      ],
-      park: [
-        'Well-maintained park with walking paths and children\'s play area',
-        'Green oasis in the city center with musical fountain shows',
-        'Riverside park perfect for picnics and evening strolls',
-        'Ecological park with diverse flora and nature trails',
-        'Family-friendly park with open spaces and recreational facilities'
-      ],
-      historical: [
-        'Remnants of an ancient fort with fascinating history',
-        'Iconic colonial-era structure in the heart of the city',
-        'Ancient water conservation structure with architectural significance',
-        'Heritage building showcasing colonial architecture',
-        'Memorial dedicated to local freedom fighters'
-      ],
-      waterpark: [
-        'Exciting water slides and wave pools for all ages',
-        'Family entertainment center with water attractions',
-        'Large aquatic park with multiple pools and slides',
-        'Resort-style water park with accommodation options',
-        'Thrilling water rides and lazy river experience'
-      ],
-      lake: [
-        'Serene lake perfect for boating and bird watching',
-        'Beautiful riverfront with sunset views',
-        'Urban lake with walking trails and picnic spots',
-        'Natural spring-fed pond with religious significance',
-        'Ancient water reservoir with historical importance'
-      ],
-      museum: [
-        'Showcasing the rich cultural heritage of Eastern UP',
-        'Exhibition of traditional crafts and folk art',
-        'Collection of archaeological finds from the region',
-        'Display of traditional weaving techniques and textiles',
-        'Museum highlighting agricultural history and innovations'
-      ],
-      garden: [
-        'Thousands of rose varieties in a beautifully landscaped setting',
-        'Educational garden with plant species from across India',
-        'Enclosed garden habitat for various butterfly species',
-        'Collection of medicinal plants with informational displays',
-        'Well-maintained public garden with seasonal flower displays'
-      ],
-      other: [
-        'Traditional market showcasing local crafts and produce',
-        'Village preserving traditional crafts and offering workshops',
-        'Popular viewpoint for spectacular sunset vistas',
-        'Outdoor activity center with zip-lining and rock climbing',
-        'Venue for cultural performances and local art exhibitions'
-      ],
-    };
 
-    const contacts = [
-      null,
-      null,
-      '9876543210',
-      '8765432109',
-      '7654321098',
-      '6543210987',
-      '5432109876',
-      null
-    ];
+useEffect(() => {
+  const fetchplaces = async () => {
+    try {
+    const res = await fetch('/api/getbestplaces');
+const data = await res.json();
 
-    for (let i = 0; i < count; i++) {
-      places.push({
-        id: `${category}-${i+1}`,
-        name: categoryNames[category][i],
-        location: locations[Math.floor(Math.random() * locations.length)],
-        description: descriptions[category][i],
-        contact: contacts[Math.floor(Math.random() * contacts.length)],
-        rating: (4 + Math.random()).toFixed(1),
-        image: `/place-${Math.floor(Math.random() * 5) + 1}.jpg`, // Placeholder image
-      });
+if (!data.places || !Array.isArray(data.places)) {
+  console.error("Invalid places data", data);
+  return;
+}
+
+const grouped = data.places.reduce((acc, places) => {
+  const cat = places.category;
+  if (!acc[cat]) acc[cat] = [];
+  acc[cat].push(places);
+  return acc;
+}, {});
+
+      console.log("Grouped placess by category:", grouped);
+      setplacessByCategory(grouped);
+    } catch (err) {
+      console.error('Error fetching placess:', err);
+    } finally {
+      setLoading(false);
     }
-    
-    return places;
   };
 
-  // All places data
-  const allPlaces = {
-    temple: generatePlaces('temple'),
-    park: generatePlaces('park'),
-    historical: generatePlaces('historical'),
-    waterpark: generatePlaces('waterpark'),
-    lake: generatePlaces('lake'),
-    museum: generatePlaces('museum'),
-    garden: generatePlaces('garden'),
-    other: generatePlaces('other'),
-  };
+  fetchplaces();
+}, []);
 
-  // Filter places based on active category and search query
-  const filteredCategories = Object.entries(allPlaces)
-    .filter(([categoryId]) => 
-      activeCategory === 'all' || categoryId === activeCategory
+
+  // Filter placess based on active category and search query
+const filteredCategories = Object.entries(placessByCategory)
+  .filter(([categoryId, places]) => 
+    (activeCategory === 'all' || categoryId === activeCategory) &&
+    (searchQuery === '' || 
+     places.some(places => 
+       places.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+       categoryId.toLowerCase().includes(searchQuery.toLowerCase())
+     )
     )
-    .filter(([categoryId, places]) => 
-      searchQuery === '' || 
-      places.some(place => 
-        place.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        place.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        categoryId.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
+  );
+
+  if (loading) {
+  return (
+    <div className="min-h-screen bg-[#1C1F24] text-[#fffaf4] flex justify-center items-center">
+      <p>Loading places...</p>
+    </div>
+  )
+}
+
+
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-[#f8fafc]">
+    <div className="min-h-screen bg-[#1C1F24] text-[#fffaf4]">
           <Sidebar />
       {/* Hero Section */}
       <div className="relative h-64 md:h-96 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0ea5e9]/80 to-[#0f172a]/80 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-[#dd7358]/80 to-[#1C1F24]/80 z-10"></div>
         <div className="absolute inset-0 bg-[url('/places-bg.jpg')] bg-cover bg-center opacity-30"></div>
         <div className="relative z-20 h-full flex flex-col justify-center items-center px-4 text-center">
           <motion.h1 
@@ -172,7 +96,7 @@ export default function PlacesPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            Explore <span className="text-[#0ea5e9]">Deoria's</span> Attractions
+            Explore <span className="text-[#dd7358]">Deoria's</span> Attractions
           </motion.h1>
           <motion.p 
             className="text-lg md:text-xl max-w-2xl"
@@ -196,8 +120,8 @@ export default function PlacesPage() {
               </div>
               <input
                 type="text"
-                placeholder="Search places, categories..."
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-[#1e293b] border border-[#334155] text-white focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
+                placeholder="Search placess, categories..."
+                className="w-full pl-10 pr-4 py-3 rounded-lg bg-[#25282F] border border-[#3a3e46] text-white focus:outline-none focus:ring-2 focus:ring-[#dd7358]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -205,7 +129,7 @@ export default function PlacesPage() {
             
             <div className="w-full md:w-auto">
               <select 
-                className="w-full bg-[#1e293b] border border-[#334155] text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#0ea5e9]"
+                className="w-full bg-[#25282F] border border-[#3a3e46] text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#dd7358]"
                 value={activeCategory}
                 onChange={(e) => setActiveCategory(e.target.value)}
               >
@@ -226,21 +150,21 @@ export default function PlacesPage() {
                 key={category.id}
                 className={`flex items-center px-4 py-2 rounded-full transition-all ${
                   activeCategory === category.id
-                    ? 'bg-[#0ea5e9] text-white'
-                    : 'bg-[#1e293b] hover:bg-[#334155]'
+                    ? 'bg-[#dd7358] text-white'
+                    : 'bg-[#25282F] hover:bg-[#3a3e46]'
                 }`}
                 onClick={() => setActiveCategory(category.id)}
               >
-                <span className="mr-2 text-lg">{category.icon}</span>
+                <span className="mr-2">{category.icon}</span>
                 {category.name}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Places by Category */}
+        {/* placess by Category */}
         <div className="space-y-16">
-          {filteredCategories.map(([categoryId, places]) => {
+          {filteredCategories.map(([categoryId, placess]) => {
             const category = categories.find(cat => cat.id === categoryId);
             return (
               <motion.section 
@@ -251,48 +175,50 @@ export default function PlacesPage() {
               >
                 <div className="flex justify-between items-center mb-8">
                   <h2 className="text-2xl md:text-3xl font-bold flex items-center">
-                    <span className="mr-3 text-2xl">{category?.icon}</span>
+                    <span className="mr-3">{category?.icon}</span>
                     {category?.name}
                   </h2>
-                  <button 
-                    className="text-[#0ea5e9] hover:underline flex items-center"
-                    onClick={() => router.push(`/places/${categoryId}`)}
-                  >
-                    View more <FiChevronRight className="ml-1" />
-                  </button>
+               
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                  {places.map((place) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                  {placess.map((places) => (
                     <motion.div
-                      key={place.id}
-                      className="bg-[#1e293b] rounded-xl overflow-hidden shadow-xl border border-[#334155] hover:border-[#0ea5e9]/50 transition-all flex flex-col"
+                     key={places.id + places.name}
+                      className="bg-[#25282F] rounded-xl overflow-hidden shadow-lg border border-[#3a3e46] hover:border-[#dd7358]/50 transition-all"
                       whileHover={{ y: -5 }}
                     >
-                      <div className="h-52 relative overflow-hidden">
-                        <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-full" />
-                        <div className="absolute top-2 right-2 bg-[#0ea5e9] text-white px-2 py-1 rounded-md flex items-center text-sm">
-                          <FiStar className="mr-1" /> {place.rating}
+                      <div className="h-40 bg-gray-700 relative">
+                        <div className="absolute top-2 right-2 bg-[#dd7358] text-white px-2 py-1 rounded-md flex items-center text-sm">
+                          <FiStar className="mr-1" /> {places.rating}
                         </div>
                       </div>
-                      <div className="p-4 flex-1 flex flex-col">
-                        <h3 className="font-bold text-xl mb-2 text-[#e2e8f0]">{place.name}</h3>
-                        <div className="flex items-center text-[#94a3b8] text-sm mb-3">
-                          <FiMapPin className="mr-2 text-[#0ea5e9]" />
-                          <span>{place.location}</span>
-                        </div>
-                        <p className="text-[#cbd5e1] mb-4 flex-1">{place.description}</p>
+                      <div className="p-4">
+                        <h3 className="font-bold text-lg mb-1">{places.name}</h3>
+                        <div className="flex items-center text-[#c5c1b8] text-sm mb-2">
+                          <FiMapPin className="mr-2 " />
+                          <span>{places.location}</span>
                         
-                        <div className="mt-auto pt-4 border-t border-[#334155]">
-                          {place.contact ? (
-                            <div className="flex items-center">
-                              <FiPhone className="mr-2 text-[#0ea5e9]" />
-                              <span className="text-[#94a3b8]">{place.contact}</span>
-                            </div>
-                          ) : (
-                            <p className="text-[#94a3b8] text-sm">Contact information not available</p>
-                          )}
                         </div>
+                        <p className="text-[#dd7358] text-sm mb-3">Best for: {places.bestFor}</p>
+                        <div className="flex justify-between items-center mt-4">
+                          <div className="flex items-center">
+                            <FiPhone className="mr-2 text-[#dd7358]" />
+                            <span>{places.contactNo}</span>
+                          </div>
+                          <button className="text-[#dd7358] hover:underline text-sm">
+                            Directions
+                          </button>
+                    
+                          
+                        </div>
+  <div 
+  onClick={() => router.push(places.watchExperience)} 
+  className="flex items-center mt-3 justify-between text-gray-100 font-bold cursor-pointer hover:underline  text-center"
+>
+  Watch Experience
+</div>
+
                       </div>
                     </motion.div>
                   ))}
@@ -302,14 +228,14 @@ export default function PlacesPage() {
           })}
         </div>
 
-        {/* Featured Places Banner */}
-        <div className="mt-20 mb-16 bg-gradient-to-r from-[#0ea5e9] to-[#0284c7] rounded-2xl p-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Share Your Favorite Places</h2>
+        {/* Featured placess Banner */}
+        <div className="mt-20 mb-16 bg-gradient-to-r from-[#dd7358] to-[#c45a40] rounded-2xl p-8 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">List Your Business on Deoria Official</h2>
           <p className="max-w-2xl mx-auto mb-6">
-            Know a hidden gem in Deoria? Help us discover more amazing places by sharing your recommendations with our community.
+            Get discovered by thousands of customers in Deoria. Join our platform to showcase your places and reach more customers.
           </p>
-          <button className="bg-white text-[#0ea5e9] font-bold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
-            Suggest a Place
+          <button className="bg-white text-[#dd7358] font-bold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+            Register Your places
           </button>
         </div>
       </div>
