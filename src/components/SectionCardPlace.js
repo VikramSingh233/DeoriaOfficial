@@ -3,9 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-const SectionCard = ({ title, description,guest,link,image, delay = 0 }) => {
-
-  
+const SectionCardPlace = ({ title, description,image, delay = 0 }) => {
   return (
     <motion.div
       className="bg-[#25282F] border border-[#3a3d45] rounded-2xl overflow-hidden"
@@ -15,30 +13,22 @@ const SectionCard = ({ title, description,guest,link,image, delay = 0 }) => {
       whileHover={{ y: -5, transition: { duration: 0.2 } }}
     >
       {/* <Image className="bg-gray-200 border-2 border-dashed w-full h-48" /> */}
-<iframe
-  src={image}
-  className="w-full h-60 rounded-xl"
-  allow="autoplay"
-  
+<img
+  className="bg-gray-200 border-2 border-dashed w-full h-48"
+  src={image || "https://via.placeholder.com/100"}
+  alt="Placeholder"
+  width={100}
+  height={100}
 />
-
-
-
 
       <div className="p-5">
         <h3 className="text-xl font-bold mb-2">{title}</h3>
         <p className="text-[#c5c1b8]">{description}</p>
-        <div className="mt-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <div className="bg-gray-200 border-2 border-dashed rounded-xl w-8 h-8 mr-2" />
-            <span className="text-sm">{guest}</span>
-          </div>
-          {/* <span className="text-sm text-[#ff7e5f]">Read More →</span> */}
-          <a href={link} target="_blank" className="text-sm text-[#ff7e5f]">Watch now</a>
-        </div>
+       
+        
       </div>
     </motion.div>
   );
 };
 
-export default SectionCard;
+export default SectionCardPlace;

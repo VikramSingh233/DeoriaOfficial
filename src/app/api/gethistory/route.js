@@ -3,15 +3,24 @@ import { NextResponse } from 'next/server';
 import History from '@/models/history.model';
 import { connectToDB } from '@/dbconfig/dbconfig';
 
+// Function to convert Google Drive share link to preview format
+function convertDriveUrlToPreview(url) {
+  const match = url.match(/\/file\/d\/([^/]+)\//);
+  if (match && match[1]) {
+    const fileId = match[1];
+    return `https://drive.google.com/file/d/${fileId}/preview`;
+  }
+  return url; // return original if invalid
+}
+
 export async function GET() {
   try {
     await connectToDB();
 
-   
     const histories = await History.find();
 
-    // Map to format expected by frontend
-    const formattedHistories = histories.map((doc, index) => ({
+    // Format the data for frontend
+    const formattedHistories = histories.map((doc) => ({
       id: doc._id.toString(),
       title: doc.name,
       location: doc.location,
@@ -19,7 +28,9 @@ export async function GET() {
         ? doc.description.substring(0, 120) + "..."
         : doc.description,
       detailed: doc.description,
-      images: doc.images,  // array of image URLs from DB
+      images: Array.isArray(doc.images)
+        ? doc.images.map(convertDriveUrlToPreview)
+        : [],
     }));
 
     return NextResponse.json({ success: true, data: formattedHistories });

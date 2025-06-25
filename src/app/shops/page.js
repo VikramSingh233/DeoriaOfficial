@@ -1,197 +1,161 @@
 // app/shops/page.js
 'use client'
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FiSearch, FiPhone, FiMapPin, FiStar, FiChevronRight } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
-  import { useEffect } from 'react';
+
 export default function ShopPage() {
   const router = useRouter();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
-  
-const [shopsByCategory, setShopsByCategory] = useState({});
-const [loading, setLoading] = useState(true);
+  const [shopsByCategory, setShopsByCategory] = useState({});
+  const [loading, setLoading] = useState(true);
 
-  // Shop categories
   const categories = [
-    { id: 'veg', name: 'Vegetarian Restaurants', icon: '🥗' },
-    { id: 'nonveg', name: 'Non-Veg Restaurants', icon: '🍗' },
-    { id: 'hotel', name: 'Hotels & Lodging', icon: '🏨' },
-    { id: 'barber', name: 'Barber Shops', icon: '💈' },
-    { id: 'electronics', name: 'Electronic Shops', icon: '📱' },
-    { id: 'clothing', name: 'Clothing Stores', icon: '👕' },
-    { id: 'grocery', name: 'Grocery Stores', icon: '🛒' },
-    { id: 'medical', name: 'Medical Stores', icon: '💊' },
+    { id: 'veg', name: 'Vegetarian', icon: '🥗' },
+    { id: 'nonveg', name: 'Non-Veg', icon: '🍗' },
+    { id: 'hotel', name: 'Hotels', icon: '🏨' },
+    { id: 'barber', name: 'Barbers', icon: '💈' },
+    { id: 'electronics', name: 'Electronics', icon: '📱' },
+    { id: 'clothing', name: 'Clothing', icon: '👕' },
+    { id: 'grocery', name: 'Grocery', icon: '🛒' },
+    { id: 'medical', name: 'Medical', icon: '💊' },
   ];
 
-
-
-
-useEffect(() => {
-  const fetchShops = async () => {
-    try {
-    const res = await fetch('/api/getbestshops');
-const data = await res.json();
-
-if (!data.shops || !Array.isArray(data.shops)) {
-  console.error("Invalid shop data", data);
-  return;
-}
-
-const grouped = data.shops.reduce((acc, shop) => {
-  const cat = shop.category;
-  if (!acc[cat]) acc[cat] = [];
-  acc[cat].push(shop);
-  return acc;
-}, {});
-
-      console.log("Grouped shops by category:", grouped);
-      setShopsByCategory(grouped);
-    } catch (err) {
-      console.error('Error fetching shops:', err);
-    } finally {
-      setLoading(false);
-    }
+  const convertDriveUrlToPreview = (url) => {
+    const match = url?.match(/\/file\/d\/([^/]+)\//);
+    return match?.[1] ? `https://drive.google.com/file/d/${match[1]}/preview` : url;
   };
 
-  fetchShops();
-}, []);
+  useEffect(() => {
+    const fetchShops = async () => {
+      try {
+        const res = await fetch('/api/getbestshops');
+        const data = await res.json();
 
+        if (!data.shops || !Array.isArray(data.shops)) {
+          console.error("Invalid shop data", data);
+          return;
+        }
 
+        const grouped = data.shops.reduce((acc, shop) => {
+          const cat = shop.category;
+          if (!acc[cat]) acc[cat] = [];
+          acc[cat].push(shop);
+          return acc;
+        }, {});
 
-  // Generate dummy shop data
-  // const generateShops = (category, count = 5) => {
-  //   const shops = [];
-  //   const categoryNames = {
-  //     veg: ['Green Leaf Restaurant', 'Pure Veg Delight', 'Sattvik Bhojanalaya', 'Annapurna Veg Corner', 'Shree Krishna Veg Plaza'],
-  //     nonveg: ['Chicken Paradise', 'Meat Master', 'Royal Non-Veg House', 'Spicy Grill Corner', 'Mutton Delight'],
-  //     hotel: ['Deoria Grand', 'Comfort Inn', 'River View Lodge', 'City Center Hotel', 'Travelers Rest'],
-  //     barber: ['Style Cuts', 'Gentleman Salon', 'Hair Masters', 'Trendy Looks', 'Royal Barber'],
-  //     electronics: ['Electro World', 'Gadget Hub', 'Tech Palace', 'Digital Point', 'Smart Devices'],
-  //     clothing: ['Fashion Hub', 'Trendy Threads', 'Ethnic Wear Center', 'Denim Palace', 'Silk & Sarees'],
-  //     grocery: ['Daily Needs Mart', 'Super Saver Store', 'Fresh & Fine Grocers', 'Family Food Center', 'Local Bazaar'],
-  //     medical: ['Life Care Pharmacy', 'Medi Quick', 'Health Plus', '24x7 Medicals', 'Apollo Drug Store'],
-  //   };
+        setShopsByCategory(grouped);
+      } catch (err) {
+        console.error('Error fetching shops:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   const locations = [
-  //     'Near Bus Stand, Deoria',
-  //     'Main Market, Deoria',
-  //     'Raja Bazaar, Deoria',
-  //     'Civil Lines, Deoria',
-  //     'Station Road, Deoria',
-  //     'Gandhi Chowk, Deoria'
-  //   ];
+    fetchShops();
+  }, []);
 
-  //   const specialties = {
-  //     veg: ['Best Thali in Town', 'Authentic Bhojpuri Cuisine', 'Pure Desi Ghee Dishes', 'Fresh Organic Ingredients', 'Famous Litti Chokha'],
-  //     nonveg: ['Special Mutton Curry', 'Tandoori Delights', 'Butter Chicken Special', 'Fresh Seafood', 'Spicy Kebabs'],
-  //     hotel: ['AC Rooms Available', 'Free WiFi', '24/7 Reception', 'Restaurant on Premises', 'Travel Assistance'],
-  //     barber: ['Beard Styling', 'Hair Coloring', 'Professional Stylists', 'Head Massage', 'Quick Service'],
-  //     electronics: ['Mobile Repair Service', 'Genuine Accessories', 'Home Appliances', 'Competitive Prices', 'Expert Advice'],
-  //     clothing: ['Latest Fashion Trends', 'Traditional Outfits', 'Custom Tailoring', 'Discounts on Bulk', 'Festival Specials'],
-  //     grocery: ['Fresh Vegetables', 'Organic Products', 'Daily Essentials', 'Home Delivery', 'Competitive Prices'],
-  //     medical: ['24/7 Availability', 'All Medicines Available', 'Doctor Consultation', 'Home Delivery', 'Discounts for Regulars'],
-  //   };
-
-  //   for (let i = 0; i < count; i++) {
-  //     shops.push({
-  //       id: `${category}-${i+1}`,
-  //       name: categoryNames[category][i],
-  //       location: locations[Math.floor(Math.random() * locations.length)],
-  //       bestThing: specialties[category][i],
-  //       contact: `9${Math.floor(10000000 + Math.random() * 90000000)}`,
-  //       rating: (4 + Math.random()).toFixed(1),
-  //       image: `/shop-${Math.floor(Math.random() * 5) + 1}.jpg`, // Placeholder image
-  //     });
-  //   }
-    
-  //   return shops;
-  // };
-
-  // // All shops data
-  // const allShops = {
-  //   veg: generateShops('veg'),
-  //   nonveg: generateShops('nonveg'),
-  //   hotel: generateShops('hotel'),
-  //   barber: generateShops('barber'),
-  //   electronics: generateShops('electronics'),
-  //   clothing: generateShops('clothing'),
-  //   grocery: generateShops('grocery'),
-  //   medical: generateShops('medical'),
-  // };
-
-  // Filter shops based on active category and search query
-const filteredCategories = Object.entries(shopsByCategory)
-  .filter(([categoryId, shops]) => 
-    (activeCategory === 'all' || categoryId === activeCategory) &&
-    (searchQuery === '' || 
-     shops.some(shop => 
-       shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-       categoryId.toLowerCase().includes(searchQuery.toLowerCase())
-     )
-    )
-  );
+  const filteredCategories = Object.entries(shopsByCategory)
+    .filter(([categoryId, shops]) => 
+      (activeCategory === 'all' || categoryId === activeCategory) &&
+      (searchQuery === '' || 
+        shops.some(shop => 
+          shop.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          categoryId.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      )
+    );
 
   if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#0d0f14] to-[#1a1d24] text-[#fffaf4] flex justify-center items-center">
+        <div className="flex flex-col items-center">
+          <div className="w-16 h-16 border-4 border-[#dd7358] border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p>Loading shops...</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen bg-[#1C1F24] text-[#fffaf4] flex justify-center items-center">
-      <p>Loading shops...</p>
-    </div>
-  )
-}
-
-
-
-  return (
-    <div className="min-h-screen bg-[#1C1F24] text-[#fffaf4]">
-          <Sidebar />
-      {/* Hero Section */}
-      <div className="relative h-64 md:h-96 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#dd7358]/80 to-[#1C1F24]/80 z-10"></div>
-        <div className="absolute inset-0 bg-[url('/shop-bg.jpg')] bg-cover bg-center opacity-30"></div>
+    <div className="min-h-screen bg-gradient-to-br from-[#0d0f14] to-[#1a1d24] text-[#fffaf4]">
+      <Sidebar />
+      
+      {/* 3D Hero Section */}
+      <div className="relative h-80 md:h-[30rem] overflow-hidden">
+        <div className="absolute inset-0">
+          {/* 3D Background Elements */}
+          <div className="absolute top-20 left-1/4 w-48 h-48 bg-[#dd7358] rounded-full mix-blend-soft-light opacity-20 blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-1/4 w-64 h-64 bg-[#5d8aa8] rounded-full mix-blend-soft-light opacity-15 blur-3xl"></div>
+          
+          {/* Floating 3D Shapes */}
+          <motion.div 
+            className="absolute top-1/4 left-1/4 w-12 h-12 bg-[#dd7358] rounded-full"
+            animate={{ y: [0, -20, 0] }}
+            transition={{ duration: 4, repeat: Infinity }}
+          />
+          <motion.div 
+            className="absolute top-1/3 right-1/3 w-8 h-8 bg-[#5d8aa8] rounded-full"
+            animate={{ y: [0, 20, 0] }}
+            transition={{ duration: 5, repeat: Infinity, delay: 0.5 }}
+          />
+        </div>
+        
+        <div className="absolute inset-0 bg-gradient-to-b from-[#dd7358]/10 to-[#1a1d24] z-10"></div>
         <div className="relative z-20 h-full flex flex-col justify-center items-center px-4 text-center">
           <motion.h1 
-            className="text-4xl md:text-6xl font-bold mb-4"
-            initial={{ opacity: 0, y: 20 }}
+            className="text-4xl md:text-6xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-[#ff9e7d] to-[#ffd8c9]"
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.7 }}
           >
-            Discover Shops in <span className="text-[#dd7358]">Deoria</span>
+            Explore Shops in <span className="text-[#dd7358]">Deoria</span>
           </motion.h1>
           <motion.p 
-            className="text-lg md:text-xl max-w-2xl"
+            className="text-lg md:text-xl max-w-2xl text-[#c5c1b8]"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
           >
-            Explore the best local businesses in Deoria district
+            Discover the best local businesses in our district
           </motion.p>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 relative z-30">
         {/* Search and Filter Section */}
         <div className="mb-12">
           <div className="flex flex-col md:flex-row gap-4 justify-between items-center mb-8">
-            <div className="relative w-full md:w-1/2">
+            <motion.div 
+              className="relative w-full md:w-1/2"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FiSearch className="text-gray-400 text-xl" />
+                <FiSearch className="text-[#c5c1b8] text-xl" />
               </div>
               <input
                 type="text"
                 placeholder="Search shops, categories..."
-                className="w-full pl-10 pr-4 py-3 rounded-lg bg-[#25282F] border border-[#3a3e46] text-white focus:outline-none focus:ring-2 focus:ring-[#dd7358]"
+                className="w-full pl-10 pr-4 py-3 rounded-xl bg-[#25282fcc] backdrop-blur-sm border border-[#3a3e4680] text-white focus:outline-none focus:ring-2 focus:ring-[#dd7358] shadow-lg"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </div>
+            </motion.div>
             
-            <div className="w-full md:w-auto">
+            <motion.div 
+              className="w-full md:w-auto"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
               <select 
-                className="w-full bg-[#25282F] border border-[#3a3e46] text-white rounded-lg py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#dd7358]"
+                className="w-full bg-[#25282fcc] backdrop-blur-sm border border-[#3a3e4680] text-white rounded-xl py-3 px-4 focus:outline-none focus:ring-2 focus:ring-[#dd7358] shadow-lg"
                 value={activeCategory}
                 onChange={(e) => setActiveCategory(e.target.value)}
               >
@@ -202,85 +166,117 @@ const filteredCategories = Object.entries(shopsByCategory)
                   </option>
                 ))}
               </select>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Category Tabs */}
-          <div className="flex flex-wrap gap-2 mb-8 justify-center">
+          {/* 3D Category Tabs */}
+          <motion.div 
+            className="flex flex-wrap gap-4 mb-8 justify-center"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
             {categories.map((category) => (
-              <button
+              <motion.button
                 key={category.id}
-                className={`flex items-center px-4 py-2 rounded-full transition-all ${
+                className={`flex items-center px-5 py-3 rounded-xl transition-all shadow-lg transform ${
                   activeCategory === category.id
-                    ? 'bg-[#dd7358] text-white'
-                    : 'bg-[#25282F] hover:bg-[#3a3e46]'
+                    ? 'bg-gradient-to-r from-[#dd7358] to-[#c45a40] text-white shadow-[#dd735850]'
+                    : 'bg-[#25282fcc] backdrop-blur-sm border border-[#3a3e4633] hover:bg-[#3a3e4680]'
                 }`}
                 onClick={() => setActiveCategory(category.id)}
+                whileHover={{ 
+                  y: -5,
+                  scale: 1.05,
+                  boxShadow: activeCategory !== category.id 
+                    ? '0 10px 25px rgba(221, 115, 88, 0.3)' 
+                    : '0 10px 25px rgba(221, 115, 88, 0.5)'
+                }}
+                whileTap={{ scale: 0.95 }}
               >
-                <span className="mr-2">{category.icon}</span>
-                {category.name}
-              </button>
+                <span className="text-xl mr-2">{category.icon}</span>
+                <span>{category.name}</span>
+              </motion.button>
             ))}
-          </div>
+          </motion.div>
         </div>
 
-        {/* Shops by Category */}
+        {/* Shops by Category - 3D Cards */}
         <div className="space-y-16">
           {filteredCategories.map(([categoryId, shops]) => {
             const category = categories.find(cat => cat.id === categoryId);
             return (
               <motion.section 
                 key={categoryId}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
                 <div className="flex justify-between items-center mb-8">
                   <h2 className="text-2xl md:text-3xl font-bold flex items-center">
-                    <span className="mr-3">{category?.icon}</span>
-                    {category?.name}
+                    <span className="mr-3 text-3xl">{category?.icon}</span>
+                    <span className="bg-gradient-to-r from-[#ff9e7d] to-[#ffd8c9] text-transparent bg-clip-text">
+                      {category?.name}
+                    </span>
                   </h2>
-               
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                   {shops.map((shop) => (
                     <motion.div
-                     key={shop.id + shop.name}
-                      className="bg-[#25282F] rounded-xl overflow-hidden shadow-lg border border-[#3a3e46] hover:border-[#dd7358]/50 transition-all"
-                      whileHover={{ y: -5 }}
+                      key={`${shop.id ?? ''}-${shop.name}`}
+                      className="bg-[#25282fcc] backdrop-blur-sm rounded-2xl overflow-hidden border border-[#3a3e4633] shadow-2xl transform transition-all duration-300 hover:shadow-[0_25px_50px_-12px_rgba(221,115,88,0.25)]"
+                      whileHover={{ 
+                        y: -15,
+                        scale: 1.03,
+                      }}
+                      transition={{ type: "spring", stiffness: 300 }}
                     >
-                      <div className="h-40 bg-gray-700 relative">
-                        <div className="absolute top-2 right-2 bg-[#dd7358] text-white px-2 py-1 rounded-md flex items-center text-sm">
+                      <div className="h-48 relative overflow-hidden">
+                        <iframe
+                          src={convertDriveUrlToPreview(shop.image)}
+                          className="absolute top-0 left-0 w-full h-full pointer-events-none"
+                          allow="autoplay"
+                          frameBorder="0"
+                          scrolling="no"
+                        />
+                        <div className="absolute top-3 left-3 bg-[#dd7358] text-white px-3 py-1 rounded-lg flex items-center text-sm shadow-lg">
                           <FiStar className="mr-1" /> {shop.rating}
                         </div>
-                      </div>
-                      <div className="p-4">
-                        <h3 className="font-bold text-lg mb-1">{shop.name}</h3>
-                        <div className="flex items-center text-[#c5c1b8] text-sm mb-2">
-                          <FiMapPin className="mr-2 " />
-                          <span>{shop.location}</span>
                         
+                        {/* History Icon */}
+                        <div className="absolute top-3 right-3 bg-white/10 backdrop-blur-sm p-2 rounded-lg shadow-lg">
+                          <img 
+                            src="https://tse2.mm.bing.net/th?id=OIP.r2uSGypsy1AGBlqHXPRcYQHaHa&pid=Api&P=0&h=180" 
+                            alt="History" 
+                            className="w-6 h-6"
+                          />
                         </div>
-                        <p className="text-[#dd7358] text-sm mb-3">Best for: {shop.bestFor}</p>
-                        <div className="flex justify-between items-center mt-4">
+                      </div>
+                      
+                      <div className="p-5">
+                        <h3 className="font-bold text-xl mb-2 text-white">{shop.name}</h3>
+                        <div className="flex items-center text-[#c5c1b8] text-sm mb-3">
+                          <FiMapPin className="mr-2 text-[#dd7358]" />
+                          <span>{shop.location}</span>
+                        </div>
+                        <p className="text-[#ffb59e] text-sm mb-4">Best for: {shop.bestFor}</p>
+                        
+                        <div className="flex justify-between items-center mt-4 border-t border-[#3a3e4620] pt-4">
                           <div className="flex items-center">
                             <FiPhone className="mr-2 text-[#dd7358]" />
                             <span>{shop.contactNo}</span>
                           </div>
-                          <button className="text-[#dd7358] hover:underline text-sm">
-                            Directions
+                          <button 
+                            className="text-[#dd7358] hover:text-[#ff9e7d] transition-colors text-sm font-medium"
+                            onClick={() => router.push(shop.watchExperience)}
+                          >
+                            <div className="flex items-center">
+                              <span>Watch Experience</span>
+                              <FiChevronRight className="ml-1" />
+                            </div>
                           </button>
-                    
-                          
                         </div>
-  <div 
-  onClick={() => router.push(shop.watchExperience)} 
-  className="flex items-center mt-3 justify-between text-gray-100 font-bold cursor-pointer hover:underline  text-center"
->
-  Watch Experience
-</div>
-
                       </div>
                     </motion.div>
                   ))}
@@ -290,16 +286,31 @@ const filteredCategories = Object.entries(shopsByCategory)
           })}
         </div>
 
-        {/* Featured Shops Banner */}
-        <div className="mt-20 mb-16 bg-gradient-to-r from-[#dd7358] to-[#c45a40] rounded-2xl p-8 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">List Your Business on Deoria Official</h2>
-          <p className="max-w-2xl mx-auto mb-6">
+        {/* 3D CTA Banner */}
+        <motion.div 
+          className="mt-20 mb-16 bg-gradient-to-r from-[#dd7358] to-[#c45a40] rounded-2xl p-8 text-center shadow-2xl relative overflow-hidden"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+        >
+          {/* Floating elements */}
+          <div className="absolute top-0 left-0 w-full h-full">
+            <div className="absolute top-1/4 left-1/4 w-24 h-24 bg-white/10 rounded-full"></div>
+            <div className="absolute bottom-1/3 right-1/4 w-16 h-16 bg-white/15 rounded-full"></div>
+          </div>
+          
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 relative z-10">List Your Business on Deoria Official</h2>
+          <p className="max-w-2xl mx-auto mb-6 relative z-10">
             Get discovered by thousands of customers in Deoria. Join our platform to showcase your shop and reach more customers.
           </p>
-          <button className="bg-white text-[#dd7358] font-bold px-6 py-3 rounded-lg hover:bg-gray-100 transition-colors">
+          <motion.button 
+            className="bg-white text-[#dd7358] font-bold px-8 py-3 rounded-xl hover:bg-gray-100 transition-colors shadow-lg relative z-10"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             Register Your Shop
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
     </div>
   );

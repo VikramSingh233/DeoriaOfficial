@@ -9,4 +9,4 @@ const blogSchema = new mongoose.Schema({
     videoUrl: { type: String },
 });
 
-export default mongoose.model("Blog", blogSchema);
+export default mongoose.models.Blog || mongoose.model("Blog", blogSchema);
