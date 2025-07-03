@@ -23,36 +23,38 @@ const Sidebar = () => {
     <>
       {/* Mobile Menu Button */}
       <motion.button
-        className="fixed top-4 left-1 z-50 bg-[#25282F] p-3 rounded-full shadow-lg cursor-pointer"
+        className="fixed top-4 left-1 z-50 bg-[#ffffff] p-3 rounded-full shadow-lg cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}
         whileTap={{ scale: 0.95 }}
       >
-        <div className="w-6 h-0.5 bg-[#fffaf4] mb-1.5"></div>
-        <div className="w-6 h-0.5 bg-[#fffaf4] mb-1.5"></div>
-        <div className="w-6 h-0.5 bg-[#fffaf4]"></div>
+        <div className="w-6 h-0.5 bg-[#2a2a2a] mb-1.5"></div>
+        <div className="w-6 h-0.5 bg-[#2a2a2a] mb-1.5"></div>
+        <div className="w-6 h-0.5 bg-[#2a2a2a] "></div>
       </motion.button>
 
       {/* Sidebar */}
       <motion.div 
-        className={`fixed top-0 left-0 h-full bg-[#25282F] border-r border-[#3a3d45] z-40 flex flex-col py-6 transition-all duration-300 ${
+        className={`fixed top-0 left-0 h-full bg-[#f4f4f4] border-r border-[#afafaf] z-40 flex flex-col py-6 transition-all duration-300 ${
           isOpen ? 'w-56' : 'w-0 lg:w-24'
         } overflow-hidden`}
         initial={{ width: 0 }}
         animate={{ width: isOpen ? 256 : 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="px-4 mb-10">
+        <div className="px-4 -mb-5">
+               <div className='px-10 font-bold text-xl'>Deoria Official</div>
           <div className=" rounded-xl w-16 h-16" />
         </div>
         
         <div className="flex flex-col space-y-5">
+          
           {menuItems.map((item) => (
             <motion.button
               key={item.name}
               className={`flex items-center py-3 px-4 mx-4 rounded-lg group ${
                 router.pathname === `/${item.name}` 
                   ? 'bg-[#ff7e5f] text-[#1C1F24]' 
-                  : 'text-[#c5c1b8] hover:bg-[#2e3138]'
+                  : 'text-[#382a09] hover:bg-[#dde7ff]'
               } transition-colors`}
               onClick={() => router.push(`/${item.name}`)}
               whileHover={{ scale: 1.05 }}
