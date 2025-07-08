@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { FiHome, FiShoppingBag, FiMap, FiHeadphones, FiMail,FiBook,FiShare2 ,FiTicket } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
-
+import { FaTicketAlt } from 'react-icons/fa'; //
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
@@ -17,7 +17,7 @@ const Sidebar = () => {
     { name: 'blog', icon: <FiBook size={24} />, label: 'Blog' },
     { name: 'contact', icon: <FiMail size={24} />, label: 'Contact' },
     { name: 'socialmedia', icon: <FiShare2  size={24} />, label: 'Social Media' },
-    {name:'ticket',icon:<FiTicket size={24}/>,label:'Buy Tickets'},
+      { name: 'ticket', icon: <FaTicketAlt size={24} />, label: 'Buy Tickets' }
   ];
 
 
@@ -55,7 +55,7 @@ const Sidebar = () => {
           {menuItems.map((item) => (
             <motion.button
               key={item.name}
-              className={`flex items-center py-3 px-4 mx-4 rounded-lg group ${
+              className={`flex items-center py-2 px-4 mx-4 rounded-lg group ${
                 router.pathname === `/${item.name}` 
                   ? 'bg-[#ff7e5f] text-[#1C1F24]' 
                   : 'text-[#382a09] hover:bg-[#dde7ff]'
