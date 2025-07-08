@@ -17,7 +17,7 @@ const Sidebar = () => {
     { name: 'blog', icon: <FiBook size={24} />, label: 'Blog' },
     { name: 'contact', icon: <FiMail size={24} />, label: 'Contact' },
     { name: 'socialmedia', icon: <FiShare2  size={24} />, label: 'Social Media' },
-    {name:'Buy Tickets',icon:<FiTicket size={24}/>,label:'Buy Tickets'},
+    {name:'ticket',icon:<FiTicket size={24}/>,label:'Buy Tickets'},
   ];
 
 
