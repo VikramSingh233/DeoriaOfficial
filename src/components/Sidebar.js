@@ -1,7 +1,7 @@
 'use client'
 import { motion } from 'framer-motion';
 import { useState } from 'react';
-import { FiHome, FiShoppingBag, FiMap, FiHeadphones, FiMail,FiBook,FiShare2  } from 'react-icons/fi';
+import { FiHome, FiShoppingBag, FiMap, FiHeadphones, FiMail,FiBook,FiShare2 ,FiTicket } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 
 const Sidebar = () => {
@@ -17,6 +17,7 @@ const Sidebar = () => {
     { name: 'blog', icon: <FiBook size={24} />, label: 'Blog' },
     { name: 'contact', icon: <FiMail size={24} />, label: 'Contact' },
     { name: 'socialmedia', icon: <FiShare2  size={24} />, label: 'Social Media' },
+    {name:'Buy Tickets',icon:<FiTicket size={24}/>,label:'Buy Tickets'},
   ];
 
 
