@@ -1,7 +1,7 @@
 
 
 'use client'
-import { useSearchParams } from 'next/navigation';
+// import { useSearchParams } from 'next/navigation';
 import { useState,useEffect } from 'react';
 import Image from 'next/image';
 import { Canvas } from '@react-three/fiber';
