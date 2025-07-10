@@ -6,6 +6,7 @@ import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { motion } from 'framer-motion'
 import { FiPlay } from 'react-icons/fi'
+import { Suspense } from 'react'
 
 const TicketCard = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -149,7 +150,6 @@ const TicketDownload = () => {
     </div>
   )
 }
-
 export default function TicketsPage() {
   return (
     <div className="min-h-screen bg-black relative flex flex-col items-center justify-start px-4 py-8 space-y-6">
@@ -184,11 +184,13 @@ export default function TicketsPage() {
       >
         This page is proudly managed by <span className="text-pink-400 font-medium">DeoriaOfficial</span> 💫.
         <br />
-        Stay tuned for amazing events organized in Deoria! Grab your tickets below and be part of the unforgettable experiences we’re curating for the community.
+        Stay tuned for amazing events organized in Deoria!
       </motion.p>
 
-      {/* Ticket Download (after payment) */}
-      <TicketDownload />
+      {/* ✅ Wrap in Suspense */}
+      <Suspense fallback={<div className="text-white">Loading ticket info...</div>}>
+        <TicketDownload />
+      </Suspense>
 
       {/* Ticket Purchase Card */}
       <TicketCard />
