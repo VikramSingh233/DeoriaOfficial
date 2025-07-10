@@ -73,103 +73,103 @@ const TicketCard = () => {
 };
 
 
-const TicketDownload = () => {
-  const searchParams = useSearchParams()
-  const success = searchParams.get('success')
-  const name = searchParams.get('name')
-  const email = searchParams.get('email')
-  const phone = searchParams.get('phone')
+// const TicketDownload = () => {
+//   const searchParams = useSearchParams()
+//   const success = searchParams.get('success')
+//   const name = searchParams.get('name')
+//   const email = searchParams.get('email')
+//   const phone = searchParams.get('phone')
 
-  const [canDownload, setCanDownload] = useState(false)
+//   const [canDownload, setCanDownload] = useState(false)
 
-  useEffect(() => {
-    if (success === 'true' && name && email && phone) {
-      setCanDownload(true)
-    }
-  }, [success, name, email, phone])
+//   useEffect(() => {
+//     if (success === 'true' && name && email && phone) {
+//       setCanDownload(true)
+//     }
+//   }, [success, name, email, phone])
 
-  const handleDownload = () => {
-    const content = `
-🎟️ Ticket Confirmation
+//   const handleDownload = () => {
+//     const content = `
+// 🎟️ Ticket Confirmation
 
-👤 Name: ${name}
-📧 Email: ${email}
-📱 Phone: ${phone}
+// 👤 Name: ${name}
+// 📧 Email: ${email}
+// 📱 Phone: ${phone}
 
-📅 Event: Midnight Beats Festival 2025
-📍 Venue: Neon Grounds, Deoria
-🕘 Time: 9PM - 4AM
-🎧 Artists: DJ Zeno, ElectroPulse, NightWhale
+// 📅 Event: Midnight Beats Festival 2025
+// 📍 Venue: Neon Grounds, Deoria
+// 🕘 Time: 9PM - 4AM
+// 🎧 Artists: DJ Zeno, ElectroPulse, NightWhale
 
-✅ Payment Status: Confirmed
-    `.trim()
+// ✅ Payment Status: Confirmed
+//     `.trim()
 
-    const blob = new Blob([content], { type: 'text/plain' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = 'ticket.txt'
-    a.click()
-    URL.revokeObjectURL(url)
-  }
+//     const blob = new Blob([content], { type: 'text/plain' })
+//     const url = URL.createObjectURL(blob)
+//     const a = document.createElement('a')
+//     a.href = url
+//     a.download = 'ticket.txt'
+//     a.click()
+//     URL.revokeObjectURL(url)
+//   }
 
-  if (!canDownload) return null
+//   if (!canDownload) return null
 
-  return (
-    <div className="mt-8 p-4 bg-white/20 backdrop-blur rounded-xl border border-white/30 text-white space-y-3">
-      <h3 className="text-xl font-bold text-white">🎉 Your ticket is ready!</h3>
-      <p>Thank you for your purchase, <strong>{name}</strong>.</p>
-      <p>Your ticket contains all event details. Click below to download it.</p>
-      <button
-        onClick={handleDownload}
-        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-md"
-      >
-        Download Ticket 🎟️
-      </button>
-    </div>
-  )
-}
+//   return (
+//     <div className="mt-8 p-4 bg-white/20 backdrop-blur rounded-xl border border-white/30 text-white space-y-3">
+//       <h3 className="text-xl font-bold text-white">🎉 Your ticket is ready!</h3>
+//       <p>Thank you for your purchase, <strong>{name}</strong>.</p>
+//       <p>Your ticket contains all event details. Click below to download it.</p>
+//       <button
+//         onClick={handleDownload}
+//         className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-md"
+//       >
+//         Download Ticket 🎟️
+//       </button>
+//     </div>
+//   )
+// }
 
-export default function TicketsPage() {
-  return (
-    <div className="min-h-screen bg-black relative flex flex-col items-center justify-start px-4 py-8 space-y-6">
-      {/* 3D Canvas background */}
-      <div className="absolute inset-0 -z-10 opacity-20">
-        <Canvas camera={{ position: [0, 0, 5] }}>
-          <ambientLight intensity={0.5} />
-          <mesh rotation={[0.6, 0.8, 0.2]}>
-            <icosahedronGeometry args={[1.5, 0]} />
-            <meshStandardMaterial color="#ff00cc" wireframe />
-          </mesh>
-          <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={1.2} />
-        </Canvas>
-      </div>
+// export default function TicketsPage() {
+//   return (
+//     <div className="min-h-screen bg-black relative flex flex-col items-center justify-start px-4 py-8 space-y-6">
+//       {/* 3D Canvas background */}
+//       <div className="absolute inset-0 -z-10 opacity-20">
+//         <Canvas camera={{ position: [0, 0, 5] }}>
+//           <ambientLight intensity={0.5} />
+//           <mesh rotation={[0.6, 0.8, 0.2]}>
+//             <icosahedronGeometry args={[1.5, 0]} />
+//             <meshStandardMaterial color="#ff00cc" wireframe />
+//           </mesh>
+//           <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={1.2} />
+//         </Canvas>
+//       </div>
 
-      {/* Header */}
-      <motion.h1
-        className="text-3xl md:text-4xl font-extrabold text-white tracking-tight text-center"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        🎟️ Event Tickets — DeoriaOfficial
-      </motion.h1>
+//       {/* Header */}
+//       <motion.h1
+//         className="text-3xl md:text-4xl font-extrabold text-white tracking-tight text-center"
+//         initial={{ opacity: 0, y: -20 }}
+//         animate={{ opacity: 1, y: 0 }}
+//         transition={{ duration: 0.6 }}
+//       >
+//         🎟️ Event Tickets — DeoriaOfficial
+//       </motion.h1>
 
-      {/* Intro Text */}
-      <motion.p
-        className="max-w-2xl text-center text-gray-300 text-lg"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.8 }}
-      >
-        This page is proudly managed by <span className="text-pink-400 font-medium">DeoriaOfficial</span> 💫.
-        <br />
-        Stay tuned for amazing events organized in Deoria! Grab your tickets below and be part of the unforgettable experiences we’re curating for the community.
-      </motion.p>
-      <TicketDownload />
+//       {/* Intro Text */}
+//       <motion.p
+//         className="max-w-2xl text-center text-gray-300 text-lg"
+//         initial={{ opacity: 0 }}
+//         animate={{ opacity: 1 }}
+//         transition={{ delay: 0.3, duration: 0.8 }}
+//       >
+//         This page is proudly managed by <span className="text-pink-400 font-medium">DeoriaOfficial</span> 💫.
+//         <br />
+//         Stay tuned for amazing events organized in Deoria! Grab your tickets below and be part of the unforgettable experiences we’re curating for the community.
+//       </motion.p>
+//       <TicketDownload />
 
-      {/* Ticket Card */}
-      <TicketCard />
-    </div>
-  );
-}
+//       {/* Ticket Card */}
+//       <TicketCard />
+//     </div>
+//   );
+// }
