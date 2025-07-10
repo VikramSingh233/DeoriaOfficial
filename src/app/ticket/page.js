@@ -1,7 +1,7 @@
 
 
 'use client'
-
+import { useSearchParams } from 'next/navigation';
 import { useState,useEffect } from 'react';
 import Image from 'next/image';
 import { Canvas } from '@react-three/fiber';
@@ -73,62 +73,62 @@ const TicketCard = () => {
 };
 
 
-// const TicketDownload = () => {
-//   const searchParams = useSearchParams()
-//   const success = searchParams.get('success')
-//   const name = searchParams.get('name')
-//   const email = searchParams.get('email')
-//   const phone = searchParams.get('phone')
+const TicketDownload = () => {
+  const searchParams = useSearchParams()
+  const success = searchParams.get('success')
+  const name = searchParams.get('name')
+  const email = searchParams.get('email')
+  const phone = searchParams.get('phone')
 
-//   const [canDownload, setCanDownload] = useState(false)
+  const [canDownload, setCanDownload] = useState(false)
 
-//   useEffect(() => {
-//     if (success === 'true' && name && email && phone) {
-//       setCanDownload(true)
-//     }
-//   }, [success, name, email, phone])
+  useEffect(() => {
+    if (success === 'true' && name && email && phone) {
+      setCanDownload(true)
+    }
+  }, [success, name, email, phone])
 
-//   const handleDownload = () => {
-//     const content = `
-// 🎟️ Ticket Confirmation
+  const handleDownload = () => {
+    const content = `
+🎟️ Ticket Confirmation
 
-// 👤 Name: ${name}
-// 📧 Email: ${email}
-// 📱 Phone: ${phone}
+👤 Name: ${name}
+📧 Email: ${email}
+📱 Phone: ${phone}
 
-// 📅 Event: Midnight Beats Festival 2025
-// 📍 Venue: Neon Grounds, Deoria
-// 🕘 Time: 9PM - 4AM
-// 🎧 Artists: DJ Zeno, ElectroPulse, NightWhale
+📅 Event: Midnight Beats Festival 2025
+📍 Venue: Neon Grounds, Deoria
+🕘 Time: 9PM - 4AM
+🎧 Artists: DJ Zeno, ElectroPulse, NightWhale
 
-// ✅ Payment Status: Confirmed
-//     `.trim()
+✅ Payment Status: Confirmed
+    `.trim()
 
-//     const blob = new Blob([content], { type: 'text/plain' })
-//     const url = URL.createObjectURL(blob)
-//     const a = document.createElement('a')
-//     a.href = url
-//     a.download = 'ticket.txt'
-//     a.click()
-//     URL.revokeObjectURL(url)
-//   }
+    const blob = new Blob([content], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'ticket.txt'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
-//   if (!canDownload) return null
+  if (!canDownload) return null
 
-//   return (
-//     <div className="mt-8 p-4 bg-white/20 backdrop-blur rounded-xl border border-white/30 text-white space-y-3">
-//       <h3 className="text-xl font-bold text-white">🎉 Your ticket is ready!</h3>
-//       <p>Thank you for your purchase, <strong>{name}</strong>.</p>
-//       <p>Your ticket contains all event details. Click below to download it.</p>
-//       <button
-//         onClick={handleDownload}
-//         className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-md"
-//       >
-//         Download Ticket 🎟️
-//       </button>
-//     </div>
-//   )
-// }
+  return (
+    <div className="mt-8 p-4 bg-white/20 backdrop-blur rounded-xl border border-white/30 text-white space-y-3">
+      <h3 className="text-xl font-bold text-white">🎉 Your ticket is ready!</h3>
+      <p>Thank you for your purchase, <strong>{name}</strong>.</p>
+      <p>Your ticket contains all event details. Click below to download it.</p>
+      <button
+        onClick={handleDownload}
+        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg shadow-md"
+      >
+        Download Ticket 🎟️
+      </button>
+    </div>
+  )
+}
 
 export default function TicketsPage() {
   return (
@@ -166,10 +166,10 @@ export default function TicketsPage() {
         <br />
         Stay tuned for amazing events organized in Deoria! Grab your tickets below and be part of the unforgettable experiences we’re curating for the community.
       </motion.p>
+      <TicketDownload />
 
       {/* Ticket Card */}
       <TicketCard />
-      {/* <TicketDownload /> */}
     </div>
   );
 }

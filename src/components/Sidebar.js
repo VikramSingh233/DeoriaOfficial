@@ -31,9 +31,9 @@ const Sidebar = () => {
         onClick={() => setIsOpen(!isOpen)}
         whileTap={{ scale: 0.95 }}
       >
-        <div className="w-6 h-0.5 bg-[#2a2a2a] mb-1.5"></div>
-        <div className="w-6 h-0.5 bg-[#2a2a2a] mb-1.5"></div>
-        <div className="w-6 h-0.5 bg-[#2a2a2a] "></div>
+        <div className="w-6 h-0.5 bg-[#0ea5e9] mb-1.5"></div>
+        <div className="w-6 h-0.5 bg-[#0ea5e9] mb-1.5"></div>
+        <div className="w-6 h-0.5 bg-[#0ea5e9] "></div>
       </motion.button>
 
       {/* Sidebar */}
